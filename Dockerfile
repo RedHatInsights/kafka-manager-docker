@@ -12,7 +12,7 @@ ENV JAVA_HOME=/usr/java/default/ \
     KM_REVISION=97329cc8bf462723232ee73dc6702c064b5908eb \
     KM_CONFIGFILE="conf/application.conf"
 
-ADD start-kafka-manager.sh /kafka-manager-${KM_VERSION}/start-kafka-manager.sh
+ADD start-kafka-manager.sh /var/lib/kafka-manager-${KM_VERSION}/start-kafka-manager.sh
 
 RUN yum install -y java-1.8.0-openjdk-devel git wget unzip which && \
     mkdir -p /tmp && \
@@ -22,13 +22,13 @@ RUN yum install -y java-1.8.0-openjdk-devel git wget unzip which && \
     git checkout ${KM_REVISION} && \
     echo 'scalacOptions ++= Seq("-Xmax-classfile-name", "200")' >> build.sbt && \
     ./sbt clean dist && \
-    unzip  -d / ./target/universal/kafka-manager-${KM_VERSION}.zip && \
+    unzip  -d /var/lib/ ./target/universal/kafka-manager-${KM_VERSION}.zip && \
     rm -fr /tmp/* /root/.sbt /root/.ivy2 && \
-    chmod +x /kafka-manager-${KM_VERSION}/start-kafka-manager.sh && \
+    chmod +x /var/lib/kafka-manager-${KM_VERSION}/start-kafka-manager.sh && \
     yum autoremove -y java-1.8.0-openjdk-devel git wget unzip which && \
     yum clean all
 
-WORKDIR /kafka-manager-${KM_VERSION}
+WORKDIR /var/lib/kafka-manager-${KM_VERSION}/
 
 EXPOSE 9000
 ENTRYPOINT ["./start-kafka-manager.sh"]
